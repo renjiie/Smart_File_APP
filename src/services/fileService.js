@@ -1,6 +1,6 @@
 import {Platform} from 'react-native';
 import RNFS from 'react-native-fs';
-import {getMimeType, getFileExtension} from '../utils/fileUtils';
+import {getMimeType, getFileExtension, getFileInfo} from '../utils/fileUtils';
 import {
   processTextFile,
   processImageFile,
@@ -61,8 +61,103 @@ export const processFile = async file => {
 };
 
 /**
+ * Recursively scan a folder for files
+ * @param {string} folderPath Path to the folder to scan
+ * @param {Function} progressCallback Function to call with file count updates
+ * @returns {Promise<Array<Object>>} Array of file objects
+ */
+export const scanFolderForFiles = async (folderPath, progressCallback = null) => {
+  let fileCount = 0;
+  const supportedFiles = [];
+  
+  // Function to recursively process folders
+  const processFolder = async (path) => {
+    try {
+      const items = await RNFS.readDir(path);
+      
+      for (const item of items) {
+        if (item.isDirectory()) {
+          // Recursively scan subdirectories
+          await processFolder(item.path);
+        } else {
+          // Check if this is a supported file type
+          const extension = getFileExtension(item.name).toLowerCase();
+          const mimeType = getMimeType(item.name);
+          
+          // Create a file object similar to what document picker would return
+          const fileObj = {
+            uri: Platform.OS === 'ios' 
+              ? `file://${item.path}` 
+              : item.path,
+            type: mimeType,
+            name: item.name,
+            size: item.size,
+          };
+          
+          if (determineFileType(fileObj)) {
+            supportedFiles.push(fileObj);
+            fileCount++;
+            
+            // Call progress callback if provided
+            if (progressCallback && fileCount % 10 === 0) {
+              progressCallback(fileCount);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.warn(`Error reading directory ${path}:`, error);
+      // Continue with other directories instead of failing completely
+    }
+  };
+  
+  await processFolder(folderPath);
+  
+  // Final progress update
+  if (progressCallback) {
+    progressCallback(fileCount);
+  }
+  
+  return supportedFiles;
+};
+
+/**
+ * Process multiple files from a folder
+ * @param {Array<Object>} files Array of file objects
+ * @param {Function} progressCallback Function to call with progress updates
+ * @returns {Promise<Array<Object>>} Array of processing results
+ */
+export const processFolderFiles = async (files, progressCallback = null) => {
+  const results = [];
+  let processedCount = 0;
+  
+  for (const file of files) {
+    try {
+      const success = await processFile(file);
+      results.push({
+        file,
+        success,
+      });
+    } catch (error) {
+      console.error(`Error processing file ${file.name}:`, error);
+      results.push({
+        file,
+        error: error.message,
+      });
+    }
+    
+    processedCount++;
+    if (progressCallback) {
+      progressCallback(processedCount, files.length);
+    }
+  }
+  
+  return results;
+};
+
+/**
  * Determine file type based on mime type or extension
- * @param {Object} file File object from document picker
+ * @param {Object} file File object from document picker or file scan
  * @returns {string|null} File type ('text', 'image', 'video') or null if unsupported
  */
 const determineFileType = file => {
