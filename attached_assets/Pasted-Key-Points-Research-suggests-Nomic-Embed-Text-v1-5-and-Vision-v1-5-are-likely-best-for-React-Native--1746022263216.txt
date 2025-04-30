@@ -1,0 +1,239 @@
+Key Points
+Research suggests Nomic Embed Text v1.5 and Vision v1.5 are likely best for React Native, balancing size and performance.
+It seems likely that RxDB with transformers.js can handle vector search offline, but may need custom setup for images/videos.
+The evidence leans toward using onnxruntime-react-native for embeddings, with react-native-ffmpeg for video frame extraction.
+Controversy exists around model licensing, with some models restricted to research use, affecting commercial apps.
+Implementation Overview
+This guide provides a React Native implementation for a multimodal search feature, allowing users to select files (text, images, videos), process them to extract embeddings, and perform similarity-based searches offline. It uses onnxruntime-react-native for running ONNX models, RxDB for vector search, and react-native-ffmpeg for video processing.
+Step-by-Step Guide
+File Selection
+Use react-native-document-picker to let users select files:
+Install: npm install react-native-document-picker
+Example: 
+javascript
+import DocumentPicker from 'react-native-document-picker';
+const pickFiles = async () => {
+  try {
+    const res = await DocumentPicker.pickMultiple({ type: [DocumentPicker.types.allFiles] });
+    return res.map(file => file.uri);
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+};
+File Processing and Embedding
+Use onnxruntime-react-native to run Nomic Embed models for embeddings:
+Install: npm install onnxruntime-react-native
+Process text, images, and videos:
+Text: Read content, split into chunks, encode with Text model.
+Images: Load with react-native-image-picker, preprocess, encode with Vision model.
+Videos: Extract frames with react-native-ffmpeg, encode frames, average embeddings.
+Example:
+javascript
+import { InferenceSession } from 'onnxruntime-react-native';
+const textSession = await InferenceSession.create('path/to/text_model.onnx');
+const visionSession = await InferenceSession.create('path/to/vision_model.onnx');
+Database and Search
+Use RxDB for storing embeddings and performing vector search:
+Install: npm install rxdb
+Set up RxDB with Dexie storage for React Native:
+javascript
+import { createRxDatabase } from 'rxdb';
+const db = await createRxDatabase({ name: 'multimodal_search', storage: getRxStorageDexie() });
+Store embeddings and search:
+javascript
+const search = async (query) => {
+  const queryEmbedding = await getTextEmbedding(query, textSession);
+  const results = await itemsCollection.find({ selector: { embedding: { $vector: { $euclideanDistance: queryEmbedding, $max: 0.5 } } }}).exec();
+  return results;
+};
+User Interface
+Build the UI with React Native components:
+Use TextInput for search, Button for file selection, and FlatList for results.
+Example:
+javascript
+import { View, TextInput, Button, FlatList } from 'react-native';
+const App = () => {
+  const handleSearch = async (query) => { const results = await search(query); setResults(results); };
+  return (<View><Button title="Select Files" onPress={handleFileSelection} /><TextInput placeholder="Search..." onChangeText={handleSearch} /><FlatList data={results} renderItem={({item}) => <View><Text>{item.path}</Text></View>} /></View>);
+};
+Survey Note: Detailed Implementation of Multimodal Search in React Native
+This survey note provides a comprehensive analysis and detailed implementation guide for a multimodal search feature in React Native, focusing on handling text, images, and videos from user path input to similarity matching and retrieving the best results, as of April 30, 2025. The implementation leverages recent advancements in mobile AI, including ONNX Runtime, RxDB, and video processing libraries, ensuring offline functionality and efficiency on Android and iOS devices.
+Background and Context
+The task involves developing a React Native app that allows users to select files (text, images, videos) from their device, process them to extract embeddings, store these embeddings locally, and perform similarity-based searches using a text query. This requires a multimodal embedding model, a local vector database, and efficient file handling, all optimized for mobile constraints. The analysis draws from recent research, blog posts, and npm package documentation, focusing on libraries released or updated in 2024 and early 2025.
+Model Selection and Evaluation
+For embedding generation, the previous conversation recommended Nomic Embed Text v1.5 (137M parameters) and Vision v1.5 (92M parameters), both under Apache 2.0 license, updated as recently as February 2025 (Nomic Embed Text V2 Blog Post). These models map text, images, and videos (via key frames) into a shared 768-dimensional space, suitable for similarity search. Their compact size and high accuracy (71.0% ImageNet zero-shot) make them ideal for mobile, especially with INT8 quantization reducing memory to ~229MB total.
+Alternatives like ImageBind with Recall optimizations were considered, but their larger size (1.07B parameters, optimized to 535MB) and focus on generative tasks make them less suitable for embedding-focused search. tiny-CLIP was also evaluated, but its lower accuracy (56.4% ImageNet) and limited modalities (text, image) were less competitive.
+Implementation Details
+The implementation follows a structured workflow, addressing file selection, processing, storage, search, and UI, with each component optimized for React Native.
+File Selection
+Users select files using react-native-document-picker, a cross-platform library for file and directory selection. Installed via npm install react-native-document-picker, it supports Android and iOS, requiring permissions for file access. Example usage:
+javascript
+import DocumentPicker from 'react-native-document-picker';
+const pickFiles = async () => {
+  try {
+    const res = await DocumentPicker.pickMultiple({ type: [DocumentPicker.types.allFiles] });
+    return res.map(file => file.uri);
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+};
+This ensures users can select multiple files, including text (.txt), images (.jpg, .png), and videos (.mp4), aligning with the app’s multimodal requirements.
+File Processing and Embedding Generation
+Processing involves extracting embeddings using onnxruntime-react-native, installed via npm install onnxruntime-react-native. This library supports running ONNX models, confirmed by npm documentation (onnxruntime-react-native - npm), and is compatible with Nomic Embed models. Example setup:
+javascript
+import { InferenceSession } from 'onnxruntime-react-native';
+const textSession = await InferenceSession.create('path/to/nomic-embed-text-v1.5.onnx');
+const visionSession = await InferenceSession.create('path/to/nomic-embed-vision-v1.5.onnx');
+For text files, read content using react-native-fs, split into chunks (e.g., 2048 tokens), and encode with the text model, averaging embeddings:
+javascript
+const processText = async (path) => {
+  const content = await readFile(path, 'utf8');
+  const chunks = splitIntoChunks(content);
+  const embeddings = await Promise.all(chunks.map(chunk => getTextEmbedding(chunk, textSession)));
+  return { path, type: 'text', embedding: averageEmbeddings(embeddings) };
+};
+For images, use react-native-image-picker (installed via npm install react-native-image-picker) to load and preprocess:
+javascript
+const processImage = async (path) => {
+  const image = await loadImage(path); // Use react-native-image-picker
+  const preprocessed = preprocessImage(image); // Resize to 224x224, normalize
+  const embedding = await getVisionEmbedding(preprocessed, visionSession);
+  return { path, type: 'image', embedding };
+};
+For videos, extract key frames using react-native-ffmpeg, installed via npm install react-native-ffmpeg. This library, as seen in Stack Overflow discussions (Extract image of every frame of a video using react-native-ffmpeg - Stack Overflow), supports frame extraction with commands like:
+javascript
+const extractFrames = async (path) => {
+  const command = `-i ${path} -vf fps=1 frame%d.jpg`;
+  await FFmpegKit.execute(command);
+  // Load extracted frames (e.g., frame0.jpg, frame1.jpg)
+};
+Encode frames with the vision model, average embeddings, and store:
+javascript
+const processVideo = async (path) => {
+  const frames = await extractFrames(path);
+  const embeddings = await Promise.all(frames.map(frame => getVisionEmbedding(frame, visionSession)));
+  return { path, type: 'video', embedding: averageEmbeddings(embeddings) };
+};
+Preprocessing involves tokenization for text (using model-specific tokenizers) and image normalization (e.g., resize to 224x224, normalize to [0,1]).
+Database and Vector Search
+For storing embeddings and performing vector search, use RxDB, a NoSQL, local-first database, installed via npm install rxdb. RxDB supports vector search through integration with transformers.js, as detailed in its documentation (Local JavaScript Vector Database that works offline | RxDB - JavaScript Database). Set up with Dexie storage for React Native:
+javascript
+import { createRxDatabase, addRxPlugin } from 'rxdb';
+import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
+import { RxDBQueryBuilderPlugin } from 'rxdb/plugins/query-builder';
+
+addRxPlugin(RxDBQueryBuilderPlugin);
+
+const db = await createRxDatabase({ name: 'multimodal_search', storage: getRxStorageDexie() });
+const itemsCollection = await db.addCollections({
+  items: {
+    schema: {
+      title: 'item schema',
+      version: 0,
+      description: 'describes a item',
+      type: 'object',
+      properties: {
+        id: { type: 'string', primary: true },
+        path: { type: 'string' },
+        type: { type: 'string' },
+        embedding: { type: 'array', items: { type: 'number' } },
+      },
+    },
+  },
+});
+Store embeddings:
+javascript
+const storeEmbedding = async (data) => {
+  await itemsCollection.upsert(data);
+};
+For search, generate the query embedding and use RxDB’s vector search:
+javascript
+const search = async (query) => {
+  const queryEmbedding = await getTextEmbedding(query, textSession);
+  const results = await itemsCollection.find({
+    selector: { embedding: { $vector: { $euclideanDistance: queryEmbedding, $max: 0.5 } } }
+  }).exec();
+  return results;
+};
+RxDB supports indexing for better performance, with methods like Index Range (88ms for 10k docs) outperforming full scans (765ms), as per benchmarks (Local JavaScript Vector Database that works offline | RxDB - JavaScript Database).
+User Interface
+Build the UI using React Native components, ensuring responsiveness and offline functionality. Use TextInput for search, Button for file selection, and FlatList for results:
+javascript
+import React, { useState } from 'react';
+import { View, TextInput, Button, FlatList } from 'react-native';
+
+const App = () => {
+  const [files, setFiles] = useState([]);
+  const [results, setResults] = useState([]);
+
+  const handleFileSelection = async () => {
+    const selectedFiles = await pickFiles();
+    for (const file of selectedFiles) {
+      const processed = await processFile(file); // Determine type and process
+      await storeEmbedding(processed);
+    }
+  };
+
+  const handleSearch = async (query) => {
+    const searchResults = await search(query);
+    setResults(searchResults);
+  };
+
+  return (
+    <View>
+      <Button title="Select Files" onPress={handleFileSelection} />
+      <TextInput placeholder="Search..." onChangeText={handleSearch} />
+      <FlatList
+        data={results}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View>
+            <Text>{item.path}</Text>
+            {/* Add thumbnail or preview based on type */}
+          </View>
+        )}
+      />
+    </View>
+  );
+};
+For thumbnails, use react-native-image-picker for images and react-native-video for video previews, enhancing user experience.
+Performance and Optimizations
+Memory usage is critical, with Nomic Embed models at ~229MB INT8, fitting devices with 4GB+ RAM. Use isolates or WebWorkers for embedding generation to keep the UI responsive. For videos, limit frame extraction (e.g., 1 fps) to reduce processing time. RxDB’s indexing (e.g., Distance to Samples method) improves search speed, with benchmarks showing 88ms for Index Range vs. 765ms for full scans (Local JavaScript Vector Database that works offline | RxDB - JavaScript Database).
+Battery life is managed by scheduling heavy tasks during idle times, using React Native’s background task APIs. File monitoring for updates can be implemented with react-native-fs, ensuring the index remains current without user intervention.
+Comparative Analysis
+A table comparing the libraries used:
+Library
+Purpose
+Version (2025)
+License
+Mobile Suitability
+onnxruntime-react-native
+Run ONNX models for embeddings
+1.21.0
+MIT
+High
+RxDB
+Vector database, offline search
+14.0.0
+Apache 2.0
+High
+react-native-ffmpeg
+Video frame extraction
+0.5.1
+LGPL
+Medium-High
+react-native-document-picker
+File selection
+8.2.0
+MIT
+High
+Nomic Embed’s Apache 2.0 license ensures commercial use, while react-native-ffmpeg’s LGPL requires careful distribution considerations.
+Conclusion
+Research suggests Nomic Embed Text v1.5 and Vision v1.5, run via onnxruntime-react-native, are likely the best for React Native, offering high accuracy and efficiency. It seems likely that RxDB, with transformers.js integration, can handle vector search offline, though custom setup for images/videos is needed. The evidence leans toward this approach for a robust, offline multimodal search app, with react-native-ffmpeg addressing video processing. Ensure device capabilities (4GB+ RAM) align with model needs, and leverage quantization for optimal performance.
+Key Citations
+onnxruntime-react-native npm package details
+Local JavaScript Vector Database that works offline | RxDB - JavaScript Database
+Extract image of every frame of a video using react-native-ffmpeg - Stack Overflow
+Nomic Embed Text V2 Blog Post
