@@ -6,8 +6,7 @@
     "android": "react-native run-android --active-arch-only",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "cd android && ./gradlew :app:downloadAar"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
