@@ -1,11 +1,10 @@
-
 {
   "name": "workspace",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "android": "react-native run-android --active-arch-only",
-    "ios": "react-native run-ios", 
+    "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,7 +14,9 @@
   "description": "",
   "dependencies": {
     "@react-native-community/cli": "^11.3.9",
+    "@react-native-community/cli-platform-android": "^18.0.0",
     "@react-native-documents/picker": "^10.0.0",
+    "@react-native/gradle-plugin": "^0.79.2",
     "@react-native/metro-config": "^0.72.11",
     "@types/react": "^18.2.48",
     "@types/react-native": "^0.72.8",
