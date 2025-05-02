@@ -1,6 +1,0 @@
-# This directory will contain the ONNX model files
-# - nomic-embed-text-v1.5.onnx
-# - nomic-embed-vision-v1.5.onnx
-#
-# These files need to be downloaded separately and placed here
-# as they are binary files not suitable for version control.

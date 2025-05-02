@@ -1,7 +1,7 @@
 import {createRxDatabase, addRxPlugin} from 'rxdb';
 import {getRxStorageDexie} from 'rxdb/plugins/storage-dexie';
 import {RxDBQueryBuilderPlugin} from 'rxdb/plugins/query-builder';
-import {RxDBMigrationPlugin} from 'rxdb/plugins/migration';
+import {RxDBMigrationPlugin} from 'rxdb/plugins/migration-schema';
 import {RxDBLocalDocumentsPlugin} from 'rxdb/plugins/local-documents';
 
 // Add RxDB plugins

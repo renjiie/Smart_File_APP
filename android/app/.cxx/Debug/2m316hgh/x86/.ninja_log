@@ -1,0 +1,16 @@
+# ninja log v5
+0	2157	1746086144513423935	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/react/renderer/components/rndocumentpickerCGen/rndocumentpickerCGenJSI-generated.cpp.o	61ff9e972e12637c
+2686	2749	1746086145135200730	/Users/renjithr/Downloads/Smart_File_APP/android/app/build/intermediates/cxx/Debug/2m316hgh/obj/x86/libappmodules.so	c4cd51fb71c344bf
+3	2486	1746086144857557910	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/rndocumentpickerCGen-generated.cpp.o	6debee4016e57c8c
+0	2569	1746086144952152077	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/react/renderer/components/rndocumentpickerCGen/ComponentDescriptors.cpp.o	cf3247df749fd25b
+0	2686	1746086145068171456	CMakeFiles/appmodules.dir/OnLoad.cpp.o	cca42483d51847ca
+0	2607	1746086144990910466	CMakeFiles/appmodules.dir/Users/renjithr/Downloads/Smart_File_APP/android/app/build/generated/autolinking/src/main/jni/autolinking.cpp.o	4c23953cefe12fcc
+1	2522	1746086144904415665	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/react/renderer/components/rndocumentpickerCGen/ShadowNodes.cpp.o	d18d1d8784382105
+0	1710	1746086144093188082	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/react/renderer/components/rndocumentpickerCGen/EventEmitters.cpp.o	4c9096c790ac9b7
+0	9	0	clean	cae171755ba65b57
+0	2358	1746086144732854797	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/react/renderer/components/rndocumentpickerCGen/Props.cpp.o	475e520109740deb
+0	1615	1746086144000382436	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/react/renderer/components/rndocumentpickerCGen/States.cpp.o	f5a906cd3cc4fb16
+0	11	0	/Users/renjithr/Downloads/Smart_File_APP/android/app/.cxx/Debug/2m316hgh/x86/CMakeFiles/cmake.verify_globs	21fb53281169e64c
+11	47	1746113922895597399	build.ninja	f7c8af255927672d
+0	8	0	/Users/renjithr/Downloads/Smart_File_APP/android/app/.cxx/Debug/2m316hgh/x86/CMakeFiles/cmake.verify_globs	21fb53281169e64c
+0	5	0	clean	cae171755ba65b57

@@ -1,0 +1,16 @@
+# ninja log v5
+3241	3305	1746086141378594007	/Users/renjithr/Downloads/Smart_File_APP/android/app/build/intermediates/cxx/Debug/2m316hgh/obj/armeabi-v7a/libappmodules.so	fe53ffaa2044c0e3
+1	3019	1746086141090045394	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/react/renderer/components/rndocumentpickerCGen/ShadowNodes.cpp.o	9159714bc6530e8c
+0	3086	1746086141156154720	CMakeFiles/appmodules.dir/Users/renjithr/Downloads/Smart_File_APP/android/app/build/generated/autolinking/src/main/jni/autolinking.cpp.o	4887dd1c87ecde58
+2	3155	1746086141224140068	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/rndocumentpickerCGen-generated.cpp.o	659a4a45f48db53e
+1	3077	1746086141147140490	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/react/renderer/components/rndocumentpickerCGen/ComponentDescriptors.cpp.o	7cabc82252942356
+8	53	0	/Users/renjithr/Downloads/Smart_File_APP/android/app/.cxx/Debug/2m316hgh/armeabi-v7a/CMakeFiles/cmake.verify_globs	ae7c2e26f5f5b8ec
+2	2972	1746086141033226628	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/react/renderer/components/rndocumentpickerCGen/rndocumentpickerCGenJSI-generated.cpp.o	d766d0092aa5c683
+1	2559	1746086140620522230	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/react/renderer/components/rndocumentpickerCGen/EventEmitters.cpp.o	5742cf2aa5ee7b08
+0	11	0	clean	cae171755ba65b57
+1	2760	1746086140831894393	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/react/renderer/components/rndocumentpickerCGen/Props.cpp.o	a63295e016549ff3
+2	2405	1746086140477373287	rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir/react/renderer/components/rndocumentpickerCGen/States.cpp.o	68792b7be9dace0f
+0	3241	1746086141310644702	CMakeFiles/appmodules.dir/OnLoad.cpp.o	a91f101e2f2096a1
+53	108	1746113922745568857	build.ninja	acd99a4f01fa587
+0	9	0	/Users/renjithr/Downloads/Smart_File_APP/android/app/.cxx/Debug/2m316hgh/armeabi-v7a/CMakeFiles/cmake.verify_globs	ae7c2e26f5f5b8ec
+0	5	0	clean	cae171755ba65b57

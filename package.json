@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "android": "react-native run-android --active-arch-only",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "cd android && ./gradlew :app:downloadAar"
   },
   "keywords": [],
   "author": "",
@@ -11,7 +15,10 @@
   "description": "",
   "dependencies": {
     "@react-native-community/cli": "^18.0.0",
+    "@react-native-documents/picker": "^10.1.2",
     "@react-native/metro-config": "^0.79.1",
+    "@types/react": "^19.1.0",
+    "ffmpeg-kit-react-native": "6.0.2",
     "lodash": "^4.17.21",
     "onnxruntime-react-native": "^1.21.0",
     "path-browserify": "^1.0.1",
@@ -19,11 +26,14 @@
     "react-dom": "^19.1.0",
     "react-native": "^0.79.1",
     "react-native-create-thumbnail": "^2.1.1",
-    "react-native-document-picker": "^9.3.1",
-    "react-native-ffmpeg": "^0.5.2",
     "react-native-fs": "^2.20.0",
     "react-native-image-resizer": "^1.4.5",
-    "react-scripts": "^5.0.1",
     "rxdb": "^16.11.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.27.1",
+    "@babel/plugin-transform-react-jsx": "^7.27.1",
+    "@babel/runtime": "^7.27.1",
+    "metro-react-native-babel-preset": "^0.77.0"
   }
 }

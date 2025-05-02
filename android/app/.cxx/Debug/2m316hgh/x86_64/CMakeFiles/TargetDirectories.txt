@@ -1,0 +1,6 @@
+/Users/renjithr/Downloads/Smart_File_APP/android/app/.cxx/Debug/2m316hgh/x86_64/CMakeFiles/appmodules.dir
+/Users/renjithr/Downloads/Smart_File_APP/android/app/.cxx/Debug/2m316hgh/x86_64/CMakeFiles/edit_cache.dir
+/Users/renjithr/Downloads/Smart_File_APP/android/app/.cxx/Debug/2m316hgh/x86_64/CMakeFiles/rebuild_cache.dir
+/Users/renjithr/Downloads/Smart_File_APP/android/app/.cxx/Debug/2m316hgh/x86_64/rndocumentpickerCGen_autolinked_build/CMakeFiles/react_codegen_rndocumentpickerCGen.dir
+/Users/renjithr/Downloads/Smart_File_APP/android/app/.cxx/Debug/2m316hgh/x86_64/rndocumentpickerCGen_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/renjithr/Downloads/Smart_File_APP/android/app/.cxx/Debug/2m316hgh/x86_64/rndocumentpickerCGen_autolinked_build/CMakeFiles/rebuild_cache.dir
